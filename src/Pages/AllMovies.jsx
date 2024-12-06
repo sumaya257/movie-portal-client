@@ -13,7 +13,7 @@ const AllMovies = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {movies.map((movie) => (
                     <div
-                        key={movie.id}
+                        key={movie._id}
                         className="card bg-base-100 shadow-xl p-4 border border-gray-200"
                     >
                         {/* Movie Poster */}
@@ -49,7 +49,7 @@ const AllMovies = () => {
 
                             {/* See Details Button */}
                             <div className="card-actions justify-end mt-4">
-                                <Link to={`/movie/${movie.id}`}>
+                                <Link to={`/movie/${movie._id}`}>
                                     <button className="btn btn-primary">See Details</button>
                                 </Link>
                             </div>
@@ -58,12 +58,7 @@ const AllMovies = () => {
                 ))}
             </div>
 
-            {/* See All Movies Button */}
-            <div className="text-center mt-8">
-                <Link to="/movies">
-                    <button className="btn btn-secondary">See All Movies</button>
-                </Link>
-            </div>
+           
         </div>
     );
 };
