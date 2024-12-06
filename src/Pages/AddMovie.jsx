@@ -2,32 +2,85 @@ import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 import { Rating } from 'react-simple-star-rating';
 
-const AddMovie = () => {
+const AddMovie = ({ userEmail }) => {
     const [rating, setRating] = useState(0); // State to store the rating
+    const [errors, setErrors] = useState({}); // State for validation errors
 
     const handleRating = (rate) => {
         setRating(rate); // Set the rating value (out of 100)
     };
 
+    const validateInputs = (formData) => {
+        const validationErrors = {};
+
+        // Validate poster URL
+        const urlRegex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
+        if (!formData.poster || !urlRegex.test(formData.poster)) {
+            validationErrors.poster = 'Poster must be a valid URL.';
+        }
+
+        // Validate title
+        if (!formData.title || formData.title.trim().length < 2) {
+            validationErrors.title = 'Title must be at least 2 characters long.';
+        }
+
+        // Validate genre
+        if (!formData.genre) {
+            validationErrors.genre = 'Please select a genre.';
+        }
+
+        // Validate duration
+        if (!formData.duration || formData.duration <= 60) {
+            validationErrors.duration = 'Duration must be greater than 60 minutes.';
+        }
+
+        // Validate release year
+        if (!formData.releaseYear) {
+            validationErrors.releaseYear = 'Please select a release year.';
+        }
+
+        // Validate rating
+        if (rating === 0) {
+            validationErrors.rating = 'Please select a rating.';
+        }
+
+        // Validate summary
+        if (!formData.summary || formData.summary.trim().length < 10) {
+            validationErrors.summary = 'Summary must be at least 10 characters long.';
+        }
+
+        return validationErrors;
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const form = e.target;
-        const poster = form.poster.value;
-        const title = form.title.value;
-        const genre = form.genre.value;
-        const duration = form.duration.value;
-        const releaseYear = form.releaseYear.value;
-        const summary = form.summary.value;
-        const newMovie = {
-            poster,
-            title,
-            genre,
-            duration,
-            releaseYear,
-            summary,
-            rating, // Include the rating in the newMovie object
+        const formData = {
+            poster: form.poster.value,
+            title: form.title.value,
+            genre: form.genre.value,
+            duration: form.duration.value,
+            releaseYear: form.releaseYear.value,
+            summary: form.summary.value,
         };
-        console.log(newMovie);
+
+        const validationErrors = validateInputs(formData);
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
+            Swal.fire({
+                icon: 'error',
+                title: 'Validation Error',
+                text: 'Please fix the highlighted errors before submitting.',
+            });
+            return;
+        }
+
+        const newMovie = {
+            ...formData,
+            rating,
+            email: userEmail, // Add user's email to the movie data
+        };
+
         // Send data to the server
         fetch('http://localhost:5000/movie', {
             method: 'POST',
@@ -38,14 +91,16 @@ const AddMovie = () => {
         })
             .then((res) => res.json())
             .then((data) => {
-                console.log(data);
                 if (data.insertedId) {
                     Swal.fire({
                         title: 'Success!',
-                        text: 'Movie Added Successfully',
+                        text: 'Movie added successfully.',
                         icon: 'success',
                         confirmButtonText: 'OK',
                     });
+                    form.reset();
+                    setRating(0); // Reset the rating
+                    setErrors({});
                 }
             });
     };
@@ -61,6 +116,7 @@ const AddMovie = () => {
                         name="poster"
                         className="border p-2 w-full"
                     />
+                    {errors.poster && <p className="text-red-500">{errors.poster}</p>}
                 </div>
                 <div>
                     <label>Movie Title:</label>
@@ -69,18 +125,17 @@ const AddMovie = () => {
                         name="title"
                         className="border p-2 w-full"
                     />
+                    {errors.title && <p className="text-red-500">{errors.title}</p>}
                 </div>
                 <div>
                     <label>Genre:</label>
-                    <select
-                        name="genre"
-                        className="border p-2 w-full"
-                    >
+                    <select name="genre" className="border p-2 w-full">
                         <option value="">Select Genre</option>
                         <option value="comedy">Comedy</option>
                         <option value="drama">Drama</option>
                         <option value="horror">Horror</option>
                     </select>
+                    {errors.genre && <p className="text-red-500">{errors.genre}</p>}
                 </div>
                 <div>
                     <label>Duration (minutes):</label>
@@ -89,39 +144,37 @@ const AddMovie = () => {
                         name="duration"
                         className="border p-2 w-full"
                     />
+                    {errors.duration && <p className="text-red-500">{errors.duration}</p>}
                 </div>
                 <div>
                     <label>Release Year:</label>
-                    <select
-                        name="releaseYear"
-                        className="border p-2 w-full"
-                    >
+                    <select name="releaseYear" className="border p-2 w-full">
                         <option value="">Select Year</option>
                         <option value="2024">2024</option>
                         <option value="2023">2023</option>
                         <option value="2022">2022</option>
                     </select>
+                    {errors.releaseYear && (
+                        <p className="text-red-500">{errors.releaseYear}</p>
+                    )}
                 </div>
                 <div className="p-6 w-1/2 mx-auto bg-gray-100 rounded shadow-md">
                     <h1 className="text-xl font-bold mb-4">Rate This Movie</h1>
                     <div className="flex items-center justify-center space-x-2">
-                        {/* Rating Component */}
                         <Rating
-                            onClick={handleRating} // Function to handle the rating
-                            ratingValue={rating} // Current rating value
-                            size={30} // Size of the stars
-                            fillColor="#1F2937" 
+                            onClick={handleRating}
+                            ratingValue={rating}
+                            size={30}
+                            fillColor="#1F2937"
                         />
-                        {/* Display the numeric rating */}
                         <span className="text-lg font-semibold">{rating} / 5</span>
                     </div>
+                    {errors.rating && <p className="text-red-500">{errors.rating}</p>}
                 </div>
                 <div>
                     <label>Summary:</label>
-                    <textarea
-                        name="summary"
-                        className="border p-2 w-full"
-                    />
+                    <textarea name="summary" className="border p-2 w-full" />
+                    {errors.summary && <p className="text-red-500">{errors.summary}</p>}
                 </div>
                 <button type="submit" className="bg-[#1F2937] text-white p-2 rounded">
                     Add Movie
@@ -132,179 +185,3 @@ const AddMovie = () => {
 };
 
 export default AddMovie;
-
-
-// src/pages/AddMovie.js
-// import React, { useState } from 'react';
-// import axios from 'axios';
-// import { toast } from 'react-toastify';
-// import 'react-toastify/dist/ReactToastify.css';
-// import { Rating } from 'react-simple-star-rating';
-
-// toast.configure();
-
-// const AddMovie = () => {
-//     const [formData, setFormData] = useState({
-//         poster: '',
-//         title: '',
-//         genre: '',
-//         duration: '',
-//         releaseYear: '',
-//         rating: 0,
-//         summary: '',
-//     });
-
-//     const userEmail = "user@example.com"; // Replace with authenticated user's email
-//     const [rating, setRating] = useState(0);
-
-//     const handleChange = (e) => {
-//         const { name, value } = e.target;
-//         setFormData({ ...formData, [name]: value });
-//     };
-
-//     const handleRating = (rate) => {
-//         setRating(rate);
-//         setFormData({ ...formData, rating: rate / 20 }); // Convert to 1-5 scale
-//     };
-
-//     const validateForm = () => {
-//         if (!formData.poster.startsWith('http')) {
-//             toast.error('Poster must be a valid URL.');
-//             return false;
-//         }
-//         if (formData.title.length < 2) {
-//             toast.error('Title must have at least 2 characters.');
-//             return false;
-//         }
-//         if (!formData.genre) {
-//             toast.error('Genre is required.');
-//             return false;
-//         }
-//         if (formData.duration <= 60) {
-//             toast.error('Duration must be greater than 60 minutes.');
-//             return false;
-//         }
-//         if (!formData.releaseYear) {
-//             toast.error('Release year is required.');
-//             return false;
-//         }
-//         if (rating === 0) {
-//             toast.error('Rating is required.');
-//             return false;
-//         }
-//         if (formData.summary.length < 10) {
-//             toast.error('Summary must have at least 10 characters.');
-//             return false;
-//         }
-//         return true;
-//     };
-
-//     const handleSubmit = async (e) => {
-//         e.preventDefault();
-//         if (!validateForm()) return;
-
-//         try {
-//             const response = await axios.post('http://localhost:5000/add-movie', {
-//                 ...formData,
-//                 userEmail,
-//             });
-//             toast.success(response.data.message);
-//             setFormData({
-//                 poster: '',
-//                 title: '',
-//                 genre: '',
-//                 duration: '',
-//                 releaseYear: '',
-//                 rating: 0,
-//                 summary: '',
-//             });
-//             setRating(0);
-//         } catch (error) {
-//             toast.error('Failed to add movie.');
-//         }
-//     };
-
-//     return (
-//         <div className="p-6">
-//             <h1 className="text-2xl font-bold mb-4">Add Movie</h1>
-//             <form onSubmit={handleSubmit} className="space-y-4">
-//                 <div>
-//                     <label>Movie Poster (URL):</label>
-//                     <input
-//                         type="text"
-//                         name="poster"
-//                         value={formData.poster}
-//                         onChange={handleChange}
-//                         className="border p-2 w-full"
-//                     />
-//                 </div>
-//                 <div>
-//                     <label>Movie Title:</label>
-//                     <input
-//                         type="text"
-//                         name="title"
-//                         value={formData.title}
-//                         onChange={handleChange}
-//                         className="border p-2 w-full"
-//                     />
-//                 </div>
-//                 <div>
-//                     <label>Genre:</label>
-//                     <select
-//                         name="genre"
-//                         value={formData.genre}
-//                         onChange={handleChange}
-//                         className="border p-2 w-full"
-//                     >
-//                         <option value="">Select Genre</option>
-//                         <option value="comedy">Comedy</option>
-//                         <option value="drama">Drama</option>
-//                         <option value="horror">Horror</option>
-//                     </select>
-//                 </div>
-//                 <div>
-//                     <label>Duration (minutes):</label>
-//                     <input
-//                         type="number"
-//                         name="duration"
-//                         value={formData.duration}
-//                         onChange={handleChange}
-//                         className="border p-2 w-full"
-//                     />
-//                 </div>
-//                 <div>
-//                     <label>Release Year:</label>
-//                     <select
-//                         name="releaseYear"
-//                         value={formData.releaseYear}
-//                         onChange={handleChange}
-//                         className="border p-2 w-full"
-//                     >
-//                         <option value="">Select Year</option>
-//                         <option value="2024">2024</option>
-//                         <option value="2023">2023</option>
-//                         <option value="2022">2022</option>
-//                     </select>
-//                 </div>
-//                 <div>
-//                     <label>Rating:</label>
-//                     <Rating onClick={handleRating} ratingValue={rating} />
-//                 </div>
-//                 <div>
-//                     <label>Summary:</label>
-//                     <textarea
-//                         name="summary"
-//                         value={formData.summary}
-//                         onChange={handleChange}
-//                         className="border p-2 w-full"
-//                     />
-//                 </div>
-//                 <button type="submit" className="bg-blue-500 text-white p-2 rounded">
-//                     Add Movie
-//                 </button>
-//             </form>
-//         </div>
-//     );
-// };
-
-// export default AddMovie;
