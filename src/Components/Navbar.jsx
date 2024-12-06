@@ -26,7 +26,7 @@ const Navbar = () => {
           <NavLink to="/add-movie" className="hover:text-purple-400">
             Add Movie
           </NavLink>
-          <NavLink to="/favorites" className="hover:text-purple-400">
+          <NavLink to="/favourite" className="hover:text-purple-400">
             My Favorites
           </NavLink>
           <NavLink to="/public-route" className="hover:text-purple-400">
@@ -99,7 +99,7 @@ const Navbar = () => {
             Add Movie
           </NavLink>
           <NavLink
-            to="/favorites"
+            to="/favourite"
             className="block px-4 py-2 hover:bg-gray-600"
             onClick={toggleMenu}
           >

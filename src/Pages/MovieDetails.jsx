@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLoaderData, useParams,  useNavigate } from 'react-router-dom';
+import { useLoaderData, useParams, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
@@ -12,9 +12,9 @@ const MovieDetails = () => {
     console.log(movies)
     // Find the specific movie by ID
     const movie = movies.find((movie) => movie._id === id);
-    console.log('got movie',movie)
-      // Handle delete movie
-      const handleDelete = async () => {
+    console.log('got movie', movie)
+    // Handle delete movie
+    const handleDelete = async () => {
         // Show a SweetAlert2 confirmation dialog
         Swal.fire({
             title: 'Are you sure?',
@@ -53,7 +53,39 @@ const MovieDetails = () => {
             }
         });
     };
-    
+
+    const handleAddToFavorite = async () => {
+        try {
+            // Create the favorite movie object
+            const favoriteMovie = {
+                movieId: id, // ID of the movie being added to favorites
+                title: movie.title, // Movie title
+                poster: movie.poster, // Movie poster
+            };
+            console.log(favoriteMovie)
+            // Send a POST request to the server to add the movie to favorites
+            const response = await fetch('http://localhost:5000/favorites', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(favoriteMovie),
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                console.log(result.message);
+                alert('Movie added to favorites successfully!');
+            } else {
+                throw new Error('Failed to add movie to favorites.');
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Error adding movie to favorites.');
+        }
+    };
+
+
 
     return (
         <div className="container mx-auto p-6">
@@ -85,15 +117,15 @@ const MovieDetails = () => {
 
                     {/* Add to Favorite Button */}
                     <button
-                        // onClick={handleAddToFavorite}
+                        onClick={handleAddToFavorite}
                         className="btn btn-primary"
                     >
                         Add to Favorite
                     </button>
                 </div>
             </div>
-             {/* See All Movies Button */}
-             <div className="text-center mt-8">
+            {/* See All Movies Button */}
+            <div className="text-center mt-8">
                 <Link to="/all-movies">
                     <button className="btn btn-secondary">See All Movies</button>
                 </Link>
