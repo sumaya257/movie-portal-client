@@ -3,16 +3,14 @@ import { useLoaderData, useParams, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
-
 const MovieDetails = () => {
-    const { id } = useParams()
-    const movies = useLoaderData()
+    const { id } = useParams();
+    const movies = useLoaderData();
     const navigate = useNavigate();  // To navigate programmatically
-    console.log(id)
-    console.log(movies)
+
     // Find the specific movie by ID
     const movie = movies.find((movie) => movie._id === id);
-    console.log('got movie', movie)
+
     // Handle delete movie
     const handleDelete = async () => {
         // Show a SweetAlert2 confirmation dialog
@@ -62,7 +60,7 @@ const MovieDetails = () => {
                 title: movie.title, // Movie title
                 poster: movie.poster, // Movie poster
             };
-            console.log(favoriteMovie)
+
             // Send a POST request to the server to add the movie to favorites
             const response = await fetch('http://localhost:5000/favorites', {
                 method: 'POST',
@@ -75,17 +73,25 @@ const MovieDetails = () => {
             if (response.ok) {
                 const result = await response.json();
                 console.log(result.message);
-                alert('Movie added to favorites successfully!');
+                // Show a success alert
+                Swal.fire(
+                    'Success!',
+                    'Movie added to your favorites!',
+                    'success'
+                );
             } else {
                 throw new Error('Failed to add movie to favorites.');
             }
         } catch (error) {
             console.error(error);
-            alert('Error adding movie to favorites.');
+            // Show error message
+            Swal.fire(
+                'Error!',
+                'There was an error adding the movie to favorites.',
+                'error'
+            );
         }
     };
-
-
 
     return (
         <div className="container mx-auto p-6">
@@ -106,6 +112,7 @@ const MovieDetails = () => {
                     <p><strong>Release Year:</strong> {movie.releaseYear}</p>
                     <p><strong>Rating:</strong> {movie.rating} / 5</p>
                 </div>
+
                 <div className="flex justify-center gap-4 mt-6">
                     {/* Delete Movie Button */}
                     <button
@@ -124,11 +131,19 @@ const MovieDetails = () => {
                     </button>
                 </div>
             </div>
+
             {/* See All Movies Button */}
+            <div className='flex gap-4 justify-between'>
+            <div className="text-center mt-8">
+                <Link to={`/updatemovie/${id}`}>
+                    <button className="btn btn-primary">Update Movie</button>
+                </Link>
+            </div>
             <div className="text-center mt-8">
                 <Link to="/all-movies">
                     <button className="btn btn-secondary">See All Movies</button>
                 </Link>
+            </div>
             </div>
         </div>
     );

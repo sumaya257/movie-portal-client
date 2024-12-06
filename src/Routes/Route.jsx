@@ -7,6 +7,7 @@ import AddMovie from "../Pages/AddMovie";
 import AllMovies from "../Pages/AllMovies";
 import MovieDetails from "../Pages/MovieDetails";
 import Favourite from "../Pages/Favourite";
+import MovieUpdated from "../Pages/MovieUpdated";
 
 const router = createBrowserRouter([
     {
@@ -38,6 +39,11 @@ const router = createBrowserRouter([
             {
                 path: '/favourite',
                 element:<Favourite></Favourite>,
+            },
+            {
+                path: '/updatemovie/:id',
+                element:<MovieUpdated></MovieUpdated>,
+                loader:({params})=> fetch(`http://localhost:5000/movie/${params.id}`)
             },
         ]
     },

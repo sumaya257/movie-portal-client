@@ -1,13 +1,27 @@
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 import { Rating } from 'react-simple-star-rating';
+import { useLoaderData, useNavigate } from 'react-router-dom';
 
-const AddMovie = ({ userEmail }) => {
-    const [rating, setRating] = useState(0); // State to store the rating
-    const [errors, setErrors] = useState({}); // State for validation errors
+const MovieUpdated = () => {
+    const movie = useLoaderData(); // Get movie data from the loader
+    const { _id, title, genre, duration, releaseYear, rating: initialRating, summary, poster } = movie;
+
+    const [updatedMovie, setUpdatedMovie] = useState({
+        title,
+        genre,
+        duration,
+        releaseYear,
+        rating: initialRating,
+        summary,
+        poster,
+    });
+    const [errors, setErrors] = useState({});
+    const [rating, setRating] = useState(initialRating || 0); // Set the initial rating
+    const navigate = useNavigate();
 
     const handleRating = (rate) => {
-        setRating(rate); // Set the rating value (out of 100)
+        setRating(rate / 20); // Convert rating to a scale of 1-5
     };
 
     const validateInputs = (formData) => {
@@ -52,19 +66,17 @@ const AddMovie = ({ userEmail }) => {
         return validationErrors;
     };
 
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setUpdatedMovie((prevState) => ({
+            ...prevState,
+            [name]: value,
+        }));
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        const form = e.target;
-        const formData = {
-            poster: form.poster.value,
-            title: form.title.value,
-            genre: form.genre.value,
-            duration: form.duration.value,
-            releaseYear: form.releaseYear.value,
-            summary: form.summary.value,
-        };
-
-        const validationErrors = validateInputs(formData);
+        const validationErrors = validateInputs(updatedMovie);
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
             Swal.fire({
@@ -75,45 +87,41 @@ const AddMovie = ({ userEmail }) => {
             return;
         }
 
-        const newMovie = {
-            ...formData,
-            rating,
-            email: userEmail, // Add user's email to the movie data
-        };
+        const movieToUpdate = { ...updatedMovie, rating };
 
-        // Send data to the server
-        fetch('http://localhost:5000/movie', {
-            method: 'POST',
+        fetch(`http://localhost:5000/movie/${_id}`, {
+            method: 'PUT',
             headers: {
-                'content-type': 'application/json',
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify(newMovie),
+            body: JSON.stringify(movieToUpdate),
         })
-            .then((res) => res.json())
-            .then((data) => {
-                if (data.insertedId) {
-                    Swal.fire({
-                        title: 'Success!',
-                        text: 'Movie added successfully.',
-                        icon: 'success',
-                        confirmButtonText: 'OK',
-                    });
-                    form.reset();
-                    setRating(0); // Reset the rating
-                    setErrors({});
-                }
+            .then((response) => response.json())
+            .then(() => {
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Movie updated successfully.',
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                });
+                navigate(`/movie/${_id}`);
+            })
+            .catch((error) => {
+                console.error('Error updating movie:', error);
             });
     };
 
     return (
-        <div className="p-6 w-9/12 mx-auto bg-gray-100">
-            <h1 className="text-2xl font-bold mb-4">Add Movie</h1>
-            <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="container mx-auto p-6">
+            <h2 className="text-3xl font-bold text-center mb-8">Update Movie</h2>
+            <form onSubmit={handleSubmit} className="space-y-4 max-w-3xl mx-auto">
                 <div>
                     <label>Movie Poster (URL):</label>
                     <input
                         type="text"
                         name="poster"
+                        value={updatedMovie.poster}
+                        onChange={handleChange}
                         className="border p-2 w-full"
                     />
                     {errors.poster && <p className="text-red-500">{errors.poster}</p>}
@@ -123,13 +131,20 @@ const AddMovie = ({ userEmail }) => {
                     <input
                         type="text"
                         name="title"
+                        value={updatedMovie.title}
+                        onChange={handleChange}
                         className="border p-2 w-full"
                     />
                     {errors.title && <p className="text-red-500">{errors.title}</p>}
                 </div>
                 <div>
                     <label>Genre:</label>
-                    <select name="genre" className="border p-2 w-full">
+                    <select
+                        name="genre"
+                        value={updatedMovie.genre}
+                        onChange={handleChange}
+                        className="border p-2 w-full"
+                    >
                         <option value="">Select Genre</option>
                         <option value="comedy">Comedy</option>
                         <option value="drama">Drama</option>
@@ -142,46 +157,56 @@ const AddMovie = ({ userEmail }) => {
                     <input
                         type="number"
                         name="duration"
+                        value={updatedMovie.duration}
+                        onChange={handleChange}
                         className="border p-2 w-full"
                     />
                     {errors.duration && <p className="text-red-500">{errors.duration}</p>}
                 </div>
                 <div>
                     <label>Release Year:</label>
-                    <select name="releaseYear" className="border p-2 w-full">
+                    <select
+                        name="releaseYear"
+                        value={updatedMovie.releaseYear}
+                        onChange={handleChange}
+                        className="border p-2 w-full"
+                    >
                         <option value="">Select Year</option>
                         <option value="2024">2024</option>
                         <option value="2023">2023</option>
                         <option value="2022">2022</option>
                     </select>
-                    {errors.releaseYear && (
-                        <p className="text-red-500">{errors.releaseYear}</p>
-                    )}
-                </div>
-                <div className="p-6 w-1/2 mx-auto bg-gray-100 rounded shadow-md">
-                    <h1 className="text-xl font-bold mb-4">Rate This Movie</h1>
-                    <div className="flex items-center justify-center space-x-2">
-                        <Rating
-                            onClick={handleRating}
-                            ratingValue={rating}
-                            size={30}
-                            fillColor="#1F2937"
-                        />
-                        <span className="text-lg font-semibold">{rating} / 5</span>
-                    </div>
-                    {errors.rating && <p className="text-red-500">{errors.rating}</p>}
+                    {errors.releaseYear && <p className="text-red-500">{errors.releaseYear}</p>}
                 </div>
                 <div>
                     <label>Summary:</label>
-                    <textarea name="summary" className="border p-2 w-full" />
+                    <textarea
+                        name="summary"
+                        value={updatedMovie.summary}
+                        onChange={handleChange}
+                        className="border p-2 w-full"
+                    />
                     {errors.summary && <p className="text-red-500">{errors.summary}</p>}
                 </div>
+                <div className="p-6 bg-gray-100 rounded shadow-md">
+                    <h3 className="text-lg font-bold mb-2">Rate This Movie</h3>
+                    <div className="flex items-center space-x-2">
+                        <Rating
+                            onClick={handleRating}
+                            ratingValue={rating * 20} // Convert back to scale of 100
+                            size={30}
+                            fillColor="#1F2937"
+                        />
+                        <span>{rating} / 5</span>
+                    </div>
+                    {errors.rating && <p className="text-red-500">{errors.rating}</p>}
+                </div>
                 <button type="submit" className="bg-[#1F2937] text-white p-2 rounded">
-                    Add Movie
+                    Update Movie
                 </button>
             </form>
         </div>
     );
 };
 
-export default AddMovie;
+export default MovieUpdated;
