@@ -3,6 +3,7 @@ import MainLayout from "../Layout/MainLayout";
 import ErrorPage from "../Pages/ErrorPage";
 import Login from "../Pages/Login";
 import Register from "../Pages/Register";
+import AddMovie from "../Pages/AddMovie";
 
   const router = createBrowserRouter([
     {
@@ -16,6 +17,10 @@ import Register from "../Pages/Register";
           {
             path: '/register',
             element: <Register />,
+          },
+          {
+            path: '/add-movie',
+            element: <AddMovie />,
           },
       ]
     },
