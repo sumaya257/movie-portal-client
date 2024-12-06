@@ -1,15 +1,58 @@
 import React from 'react';
-import { useLoaderData, useParams } from 'react-router-dom';
+import { useLoaderData, useParams,  useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
+
 
 const MovieDetails = () => {
     const { id } = useParams()
     const movies = useLoaderData()
+    const navigate = useNavigate();  // To navigate programmatically
     console.log(id)
     console.log(movies)
     // Find the specific movie by ID
     const movie = movies.find((movie) => movie._id === id);
     console.log('got movie',movie)
+      // Handle delete movie
+      const handleDelete = async () => {
+        // Show a SweetAlert2 confirmation dialog
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!',
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const response = await fetch(`http://localhost:5000/movie/${id}`, {
+                        method: 'DELETE',
+                    });
+                    if (response.ok) {
+                        // Show success message
+                        Swal.fire(
+                            'Deleted!',
+                            'The movie has been deleted.',
+                            'success'
+                        );
+                        // Navigate back to All Movies page after successful deletion
+                        navigate('/all-movies');
+                    } else {
+                        throw new Error('Failed to delete movie');
+                    }
+                } catch (error) {
+                    console.error(error);
+                    Swal.fire(
+                        'Error!',
+                        'There was a problem deleting the movie.',
+                        'error'
+                    );
+                }
+            }
+        });
+    };
     
 
     return (
@@ -34,7 +77,7 @@ const MovieDetails = () => {
                 <div className="flex justify-center gap-4 mt-6">
                     {/* Delete Movie Button */}
                     <button
-                        // onClick={handleDelete}
+                        onClick={handleDelete}
                         className="btn btn-danger"
                     >
                         Delete Movie
