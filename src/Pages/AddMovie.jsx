@@ -1,17 +1,64 @@
-import React from 'react';
+import React, { useState } from 'react';
+import Swal from 'sweetalert2';
+import { Rating } from 'react-simple-star-rating';
 
 const AddMovie = () => {
+    const [rating, setRating] = useState(0); // State to store the rating
+
+    const handleRating = (rate) => {
+        setRating(rate); // Set the rating value (out of 100)
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const poster = form.poster.value;
+        const title = form.title.value;
+        const genre = form.genre.value;
+        const duration = form.duration.value;
+        const releaseYear = form.releaseYear.value;
+        const summary = form.summary.value;
+        const newMovie = {
+            poster,
+            title,
+            genre,
+            duration,
+            releaseYear,
+            summary,
+            rating, // Include the rating in the newMovie object
+        };
+        console.log(newMovie);
+        // Send data to the server
+        fetch('http://localhost:5000/movie', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+            },
+            body: JSON.stringify(newMovie),
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log(data);
+                if (data.insertedId) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Movie Added Successfully',
+                        icon: 'success',
+                        confirmButtonText: 'OK',
+                    });
+                }
+            });
+    };
+
     return (
         <div className="p-6 w-9/12 mx-auto bg-gray-100">
             <h1 className="text-2xl font-bold mb-4">Add Movie</h1>
-            <form  className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                     <label>Movie Poster (URL):</label>
                     <input
                         type="text"
                         name="poster"
-                        // value={formData.poster}
-                        // onChange={handleChange}
                         className="border p-2 w-full"
                     />
                 </div>
@@ -20,8 +67,6 @@ const AddMovie = () => {
                     <input
                         type="text"
                         name="title"
-                        // value={formData.title}
-                        // onChange={handleChange}
                         className="border p-2 w-full"
                     />
                 </div>
@@ -29,8 +74,6 @@ const AddMovie = () => {
                     <label>Genre:</label>
                     <select
                         name="genre"
-                        // value={formData.genre}
-                        // onChange={handleChange}
                         className="border p-2 w-full"
                     >
                         <option value="">Select Genre</option>
@@ -44,8 +87,6 @@ const AddMovie = () => {
                     <input
                         type="number"
                         name="duration"
-                        // value={formData.duration}
-                        // onChange={handleChange}
                         className="border p-2 w-full"
                     />
                 </div>
@@ -53,8 +94,6 @@ const AddMovie = () => {
                     <label>Release Year:</label>
                     <select
                         name="releaseYear"
-                        // value={formData.releaseYear}
-                        // onChange={handleChange}
                         className="border p-2 w-full"
                     >
                         <option value="">Select Year</option>
@@ -63,20 +102,28 @@ const AddMovie = () => {
                         <option value="2022">2022</option>
                     </select>
                 </div>
-                <div>
-                    <label>Rating:</label>
-                    {/* <Rating onClick={handleRating} ratingValue={rating} /> */}
+                <div className="p-6 w-1/2 mx-auto bg-gray-100 rounded shadow-md">
+                    <h1 className="text-xl font-bold mb-4">Rate This Movie</h1>
+                    <div className="flex items-center justify-center space-x-2">
+                        {/* Rating Component */}
+                        <Rating
+                            onClick={handleRating} // Function to handle the rating
+                            ratingValue={rating} // Current rating value
+                            size={30} // Size of the stars
+                            fillColor="#1F2937" 
+                        />
+                        {/* Display the numeric rating */}
+                        <span className="text-lg font-semibold">{rating} / 5</span>
+                    </div>
                 </div>
                 <div>
                     <label>Summary:</label>
                     <textarea
                         name="summary"
-                        // value={formData.summary}
-                        // onChange={handleChange}
                         className="border p-2 w-full"
                     />
                 </div>
-                <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+                <button type="submit" className="bg-[#1F2937] text-white p-2 rounded">
                     Add Movie
                 </button>
             </form>
@@ -85,6 +132,7 @@ const AddMovie = () => {
 };
 
 export default AddMovie;
+
 
 // src/pages/AddMovie.js
 // import React, { useState } from 'react';

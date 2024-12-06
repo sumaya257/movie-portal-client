@@ -20,7 +20,7 @@ const Navbar = () => {
           <NavLink to="/" className="hover:text-purple-400">
             Home
           </NavLink>
-          <NavLink to="/movies" className="hover:text-purple-400">
+          <NavLink to="/all-movies" className="hover:text-purple-400">
             All Movies
           </NavLink>
           <NavLink to="/add-movie" className="hover:text-purple-400">
@@ -85,7 +85,7 @@ const Navbar = () => {
             Home
           </NavLink>
           <NavLink
-            to="/movies"
+            to="/all-movies"
             className="block px-4 py-2 hover:bg-gray-600"
             onClick={toggleMenu}
           >
