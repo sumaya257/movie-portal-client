@@ -1,0 +1,9 @@
+/* Custom styles for slick dots */
+.slick-dots li button:before {
+    font-size: 16px; /* Larger dots */
+    
+    opacity: 1; /* Make the dots fully visible */
+}
+
+
+

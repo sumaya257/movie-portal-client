@@ -8,12 +8,18 @@ import AllMovies from "../Pages/AllMovies";
 import MovieDetails from "../Pages/MovieDetails";
 import Favourite from "../Pages/Favourite";
 import MovieUpdated from "../Pages/MovieUpdated";
+import Home from "../Pages/Home";
 
 const router = createBrowserRouter([
     {
         path: "/",
         element: <MainLayout></MainLayout>,
         children: [
+             
+            {
+                path: '/',
+                element: <Home />,
+            },
             {
                 path: '/login',
                 element: <Login />,
