@@ -36,7 +36,7 @@ const MovieDetails = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const response = await fetch(`http://localhost:5000/movie/${id}`, {
+                    const response = await fetch(`https://movie-portal-server-rust.vercel.app/movie/${id}`, {
                         method: 'DELETE',
                     });
                     if (response.ok) {
@@ -76,7 +76,7 @@ const MovieDetails = () => {
             };
 
             // Send a POST request to add the movie to favorites
-            const response = await fetch('http://localhost:5000/favorites', {
+            const response = await fetch('https://movie-portal-server-rust.vercel.app/favorites', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

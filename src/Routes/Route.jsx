@@ -38,12 +38,12 @@ const router = createBrowserRouter([
             {
                 path: '/all-movies',
                 element: <AllMovies />,
-                loader: () => fetch('http://localhost:5000/movie'),
+                loader: () => fetch('https://movie-portal-server-rust.vercel.app/movie'),
             },
             {
                 path: '/movie/:id',
                 element:<PrivateRoute><MovieDetails></MovieDetails></PrivateRoute>,
-                loader: () => fetch('http://localhost:5000/movie'),
+                loader: () => fetch('https://movie-portal-server-rust.vercel.app/movie'),
             },
             {
                 path: '/favourite',
@@ -58,7 +58,7 @@ const router = createBrowserRouter([
             {
                 path: '/updatemovie/:id',
                 element:<PrivateRoute><MovieUpdated></MovieUpdated></PrivateRoute>,
-                loader:({params})=> fetch(`http://localhost:5000/movie/${params.id}`)
+                loader:({params})=> fetch(`https://movie-portal-server-rust.vercel.app/movie/${params.id}`)
             },
         ]
     },

@@ -27,7 +27,7 @@ const Favourite = () => {
             // Fetch favorite movies for the logged-in user
             const fetchFavorites = async () => {
                 try {
-                    const response = await fetch(`http://localhost:5000/favorites?email=${currentUserEmail}`);
+                    const response = await fetch(`https://movie-portal-server-rust.vercel.app/favorites?email=${currentUserEmail}`);
                     const data = await response.json();
                     setFavorites(data);
                 } catch (error) {
@@ -42,7 +42,7 @@ const Favourite = () => {
 
     const handleDeleteFavorite = async (movieId) => {
         try {
-            const response = await fetch(`http://localhost:5000/favorites/${movieId}`, {
+            const response = await fetch(`https://movie-portal-server-rust.vercel.app/favorites/${movieId}`, {
                 method: 'DELETE',
             });
 

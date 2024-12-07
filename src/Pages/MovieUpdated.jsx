@@ -18,7 +18,7 @@ const MovieUpdated = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         // Assuming you will call an API to update the movie here
-        fetch(`http://localhost:5000/movie/${_id}`, {
+        fetch(`https://movie-portal-server-rust.vercel.app/movie/${_id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

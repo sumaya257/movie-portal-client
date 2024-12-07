@@ -82,7 +82,7 @@ const AddMovie = ({ userEmail }) => {
         };
 
         // Send data to the server
-        fetch('http://localhost:5000/movie', {
+        fetch('https://movie-portal-server-rust.vercel.app/movie', {
             method: 'POST',
             headers: {
                 'content-type': 'application/json',
