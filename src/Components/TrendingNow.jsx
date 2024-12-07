@@ -6,7 +6,7 @@ const TrendingNow = ({theme}) => {
     ];
 
     return (
-        <div className={`min-h-screen ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}>
+        <div className={`${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}>
         <div className="p-6 mb-10 rounded-lg">
             <h2 className="text-2xl font-bold mb-4 text-center">Trending Now</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

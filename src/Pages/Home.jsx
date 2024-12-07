@@ -2,31 +2,27 @@ import React, { useState, useEffect } from 'react';
 import Banner from '../Components/Banner';
 import FeaturedMovies from '../Components/FeaturedMovie';
 import TrendingNow from '../Components/TrendingNow';
-
+import UpcomingMovies from '../Components/UpcomingMovies';
 
 const Home = () => {
-    // State to manage the theme
     const [theme, setTheme] = useState('light');
 
-    // Apply saved theme preference on mount
     useEffect(() => {
         const savedTheme = localStorage.getItem('theme') || 'light';
         setTheme(savedTheme);
-        document.documentElement.classList.add(savedTheme); // Apply theme to root
+        document.documentElement.classList.add(savedTheme);
     }, []);
 
-    // Function to toggle between dark and light mode
     const toggleTheme = () => {
         const newTheme = theme === 'light' ? 'dark' : 'light';
         setTheme(newTheme);
-        document.documentElement.classList.remove(theme); // Remove current theme class
-        document.documentElement.classList.add(newTheme); // Add new theme class
-        localStorage.setItem('theme', newTheme); // Save preference to localStorage
+        document.documentElement.classList.remove(theme);
+        document.documentElement.classList.add(newTheme);
+        localStorage.setItem('theme', newTheme);
     };
 
     return (
         <div className={`min-h-screen ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}>
-            {/* Header */}
             <header className="p-4 flex justify-end items-center bg-gray-200 dark:bg-gray-800">
                 <button
                     onClick={toggleTheme}
@@ -36,21 +32,27 @@ const Home = () => {
                 </button>
             </header>
 
-            {/* Content */}
             <div className="p-6">
                 <h2 className="text-xl font-semibold">Welcome to {theme === 'light' ? 'Light' : 'Dark'} Mode!</h2>
                 <p>
                     You are currently in {theme === 'light' ? 'a bright and clear' : 'a dark and cozy'} interface.
                 </p>
             </div>
-            <div className='mb-10'>
-            <Banner></Banner>
+
+            <div className="mb-10">
+                <Banner theme={theme} />
             </div>
-            <div className='mb-10'>
-               <FeaturedMovies theme={theme}></FeaturedMovies>
+
+            <div className="mb-10">
+                <FeaturedMovies theme={theme} />
             </div>
-            <div className='mb-10'>
-                <TrendingNow theme={theme}></TrendingNow>
+
+            <div className="mb-10">
+                <TrendingNow theme={theme} />
+            </div>
+
+            <div className="mb-10">
+                <UpcomingMovies theme={theme} />
             </div>
         </div>
     );
