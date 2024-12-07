@@ -10,6 +10,7 @@ import Favourite from "../Pages/Favourite";
 import MovieUpdated from "../Pages/MovieUpdated";
 import Home from "../Pages/Home";
 import PrivateRoute from "./PrivateRoute";
+import AboutUs from "../Components/AboutUs";
 
 const router = createBrowserRouter([
     {
@@ -47,6 +48,12 @@ const router = createBrowserRouter([
             {
                 path: '/favourite',
                 element:<PrivateRoute><Favourite></Favourite></PrivateRoute>,
+            },
+
+            {
+                path: '/aboutus',
+                element: <AboutUs />,
+                
             },
             {
                 path: '/updatemovie/:id',

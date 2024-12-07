@@ -47,8 +47,8 @@ const Navbar = () => {
           <NavLink to="/favourite" className="hover:text-purple-400">
             My Favorites
           </NavLink>
-          <NavLink to="/public-route" className="hover:text-purple-400">
-            Public Route
+          <NavLink to="/aboutus" className="hover:text-purple-400">
+            About Us
           </NavLink>
         </div>
 
@@ -147,11 +147,11 @@ const Navbar = () => {
             My Favorites
           </NavLink>
           <NavLink
-            to="/public-route"
+            to="/aboutus"
             className="block px-4 py-2 hover:bg-gray-600"
             onClick={toggleMenu}
           >
-            Public Route
+            About Us
           </NavLink>
           {user ? (
             <button
