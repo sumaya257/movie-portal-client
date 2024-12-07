@@ -10,6 +10,7 @@ import Favourite from "../Pages/Favourite";
 import MovieUpdated from "../Pages/MovieUpdated";
 import Home from "../Pages/Home";
 
+
 const router = createBrowserRouter([
     {
         path: "/",
@@ -19,6 +20,7 @@ const router = createBrowserRouter([
             {
                 path: '/',
                 element: <Home />,
+                
             },
             {
                 path: '/login',

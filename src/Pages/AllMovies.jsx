@@ -1,8 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLoaderData, Link } from 'react-router-dom';
+import { useMovies } from '../Providers/MoviesContext';
 
 const AllMovies = () => {
     const movies = useLoaderData(); // Load movies data
+    const { updateMovies } = useMovies(); // Get updateMovies function from context
+
+    // Update the context with the movies data when the component is mounted
+    useEffect(() => {
+      updateMovies(movies); // Update the context with the movies data
+    }, [movies, updateMovies]);
+
     const [searchQuery, setSearchQuery] = useState(''); // State for the search query
 
     // Filter movies based on the search query

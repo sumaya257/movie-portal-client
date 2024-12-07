@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Banner from '../Components/Banner';
+import FeaturedMovies from '../Components/FeaturedMovie';
 
 const Home = () => {
     // State to manage the theme
@@ -40,7 +41,12 @@ const Home = () => {
                     You are currently in {theme === 'light' ? 'a bright and clear' : 'a dark and cozy'} interface.
                 </p>
             </div>
+            <div className='mb-10'>
             <Banner></Banner>
+            </div>
+            <div>
+               <FeaturedMovies></FeaturedMovies>
+            </div>
         </div>
     );
 };
