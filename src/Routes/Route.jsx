@@ -9,7 +9,7 @@ import MovieDetails from "../Pages/MovieDetails";
 import Favourite from "../Pages/Favourite";
 import MovieUpdated from "../Pages/MovieUpdated";
 import Home from "../Pages/Home";
-
+import PrivateRoute from "./PrivateRoute";
 
 const router = createBrowserRouter([
     {
@@ -32,7 +32,7 @@ const router = createBrowserRouter([
             },
             {
                 path: '/add-movie',
-                element: <AddMovie />,
+                element: <PrivateRoute><AddMovie /></PrivateRoute>,
             },
             {
                 path: '/all-movies',

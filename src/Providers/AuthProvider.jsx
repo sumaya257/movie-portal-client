@@ -13,7 +13,7 @@ export const AuthContext = createContext();
 
 const auth = getAuth(app);
 
-const AuthProvider = ({children}) => {
+const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -30,27 +30,42 @@ const AuthProvider = ({children}) => {
     };
 
     // Logout
-    const logOut = () => {
+    const logOut = async () => {
         setLoading(true);
-        return signOut(auth);
+        try {
+            await signOut(auth); // Properly log out from Firebase
+        } catch (error) {
+            console.error('Error during logout:', error.message);
+        } finally {
+            setLoading(false); // Ensure loading state is updated
+        }
     };
 
     // Update Profile
-    const updateUserProfile = (updatedData) => {
-        return updateProfile(auth.currentUser, updatedData).then(() => {
-            setUser({ ...auth.currentUser, ...updatedData }); // Update local user state
-        });
+    const updateUserProfile = async (updatedData) => {
+        try {
+            if (auth.currentUser) {
+                await updateProfile(auth.currentUser, updatedData);
+                setUser({ ...auth.currentUser, ...updatedData }); // Update local user state
+            }
+        } catch (error) {
+            console.error('Failed to update user profile:', error.message);
+        }
     };
 
     // Observer
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-            setUser({
-                ...currentUser,
-                displayName: currentUser?.displayName || '',
-                photoURL: currentUser?.photoURL || '',
-            });
-            setLoading(false);
+            if (currentUser) {
+                setUser({
+                    ...currentUser,
+                    displayName: currentUser.displayName || '',
+                    photoURL: currentUser.photoURL || '',
+                });
+            } else {
+                setUser(null);
+            }
+            setLoading(false); // Ensure loading is false after user state is set
         });
         return () => unsubscribe();
     }, []);
