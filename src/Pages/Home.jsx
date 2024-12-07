@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Banner from '../Components/Banner';
 import FeaturedMovies from '../Components/FeaturedMovie';
+import TrendingNow from '../Components/TrendingNow';
+
 
 const Home = () => {
     // State to manage the theme
@@ -44,8 +46,11 @@ const Home = () => {
             <div className='mb-10'>
             <Banner></Banner>
             </div>
-            <div>
-               <FeaturedMovies></FeaturedMovies>
+            <div className='mb-10'>
+               <FeaturedMovies theme={theme}></FeaturedMovies>
+            </div>
+            <div className='mb-10'>
+                <TrendingNow theme={theme}></TrendingNow>
             </div>
         </div>
     );
