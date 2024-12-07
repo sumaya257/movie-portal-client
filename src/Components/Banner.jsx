@@ -16,7 +16,7 @@ const Banner = () => {
     };
 
     return (
-        <div className="max-w-screen-xl mx-auto">
+        <div className="max-w-screen-xl mx-auto mb-20">
             <Slider {...settings}>
                 {/* Slide 1 */}
                 <div className="relative">

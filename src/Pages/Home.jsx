@@ -39,19 +39,19 @@ const Home = () => {
                 </p>
             </div>
 
-            <div className="mb-10">
+            <div>
                 <Banner theme={theme} />
             </div>
 
-            <div className="mb-10">
+            <div>
                 <FeaturedMovies theme={theme} />
             </div>
 
-            <div className="mb-10">
+            <div>
                 <TrendingNow theme={theme} />
             </div>
 
-            <div className="mb-10">
+            <div>
                 <UpcomingMovies theme={theme} />
             </div>
         </div>
