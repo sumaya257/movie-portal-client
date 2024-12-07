@@ -1,17 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLoaderData, Link } from 'react-router-dom';
 
 const AllMovies = () => {
     const movies = useLoaderData(); // Load movies data
+    const [searchQuery, setSearchQuery] = useState(''); // State for the search query
+
+    // Filter movies based on the search query
+    const filteredMovies = movies.filter((movie) =>
+        movie.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     return (
         <div className="container mx-auto p-6">
             {/* Page Header */}
-            <h2 className="text-3xl font-bold text-center mb-8">All Movies ({movies.length})</h2>
+            <h2 className="text-3xl font-bold text-center mb-8">
+                All Movies ({filteredMovies.length})
+            </h2>
+
+            {/* Search Input */}
+            <div className="mb-6 text-center">
+                <input
+                    type="text"
+                    placeholder="Search by Title"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="input input-bordered w-1/2"
+                />
+            </div>
 
             {/* Movies Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {movies.map((movie) => (
+                {filteredMovies.map((movie) => (
                     <div
                         key={movie._id}
                         className="card bg-base-100 shadow-xl p-4 border border-gray-200"
@@ -57,8 +76,6 @@ const AllMovies = () => {
                     </div>
                 ))}
             </div>
-
-           
         </div>
     );
 };
