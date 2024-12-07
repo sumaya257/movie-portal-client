@@ -1,8 +1,8 @@
 const UpcomingMovies = ({theme}) => {
     const upcomingMovies = [
-        { title: 'The Marvels', releaseDate: '2024-02-15', poster: 'https://via.placeholder.com/150' },
-        { title: 'Aquaman and the Lost Kingdom', releaseDate: '2024-03-17', poster: 'https://via.placeholder.com/150' },
-        { title: 'Mission: Impossible – Dead Reckoning Part Two', releaseDate: '2024-05-28', poster: 'https://via.placeholder.com/150' },
+        { title: 'The Marvels', releaseDate: '2024-02-15', poster: 'https://i.ibb.co.com/CHgYpzf/marvel.jpg' },
+        { title: 'Aquaman and the Lost Kingdom', releaseDate: '2024-03-17', poster: 'https://i.ibb.co.com/bRSvhPY/lost.jpg' },
+        { title: 'Mission: Impossible – Dead Reckoning Part Two', releaseDate: '2024-05-28', poster: 'https://i.ibb.co.com/n3dzpXn/mission.webp' },
     ];
 
     return (

@@ -134,6 +134,8 @@ const AddMovie = ({ userEmail }) => {
                         <option value="comedy">Comedy</option>
                         <option value="drama">Drama</option>
                         <option value="horror">Horror</option>
+                        <option value="adventure">adventure</option>
+                        <option value="sci-fi">sci-fi</option>
                     </select>
                     {errors.genre && <p className="text-red-500">{errors.genre}</p>}
                 </div>

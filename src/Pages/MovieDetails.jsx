@@ -2,6 +2,7 @@ import React from 'react';
 import { useLoaderData, useParams, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { getAuth } from 'firebase/auth'; // Import Firebase Auth if using Firebase
 
 const MovieDetails = () => {
     const { id } = useParams();
@@ -11,9 +12,19 @@ const MovieDetails = () => {
     // Find the specific movie by ID
     const movie = movies.find((movie) => movie._id === id);
 
+    // Get the current user's email (either from Firebase or localStorage)
+    const auth = getAuth();
+    const user = auth.currentUser;
+    const userEmail = user ? user.email : localStorage.getItem('userEmail'); // First try Firebase, else use localStorage
+
+    if (!userEmail) {
+        // Handle case where no email is available
+        console.error('User email is not available.');
+        return <div>Error: User is not authenticated.</div>;
+    }
+
     // Handle delete movie
     const handleDelete = async () => {
-        // Show a SweetAlert2 confirmation dialog
         Swal.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
@@ -29,13 +40,11 @@ const MovieDetails = () => {
                         method: 'DELETE',
                     });
                     if (response.ok) {
-                        // Show success message
                         Swal.fire(
                             'Deleted!',
                             'The movie has been deleted.',
                             'success'
                         );
-                        // Navigate back to All Movies page after successful deletion
                         navigate('/all-movies');
                     } else {
                         throw new Error('Failed to delete movie');
@@ -56,12 +65,17 @@ const MovieDetails = () => {
         try {
             // Create the favorite movie object
             const favoriteMovie = {
-                movieId: id, // ID of the movie being added to favorites
+                email: userEmail, // Attach the user's email
+                movieId: id, // Movie ID
                 title: movie.title, // Movie title
                 poster: movie.poster, // Movie poster
+                genre: movie.genre,
+                duration: movie.duration,
+                releaseYear:movie.releaseYear,
+                rating:movie.rating
             };
 
-            // Send a POST request to the server to add the movie to favorites
+            // Send a POST request to add the movie to favorites
             const response = await fetch('http://localhost:5000/favorites', {
                 method: 'POST',
                 headers: {
@@ -73,7 +87,6 @@ const MovieDetails = () => {
             if (response.ok) {
                 const result = await response.json();
                 console.log(result.message);
-                // Show a success alert
                 Swal.fire(
                     'Success!',
                     'Movie added to your favorites!',
@@ -84,7 +97,6 @@ const MovieDetails = () => {
             }
         } catch (error) {
             console.error(error);
-            // Show error message
             Swal.fire(
                 'Error!',
                 'There was an error adding the movie to favorites.',
@@ -111,6 +123,7 @@ const MovieDetails = () => {
                     <p><strong>Duration:</strong> {movie.duration} mins</p>
                     <p><strong>Release Year:</strong> {movie.releaseYear}</p>
                     <p><strong>Rating:</strong> {movie.rating} / 5</p>
+                    <p><strong>Summary:</strong> {movie.summary}</p>
                 </div>
 
                 <div className="flex justify-center gap-4 mt-6">

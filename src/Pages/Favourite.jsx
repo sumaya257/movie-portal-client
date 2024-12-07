@@ -1,39 +1,53 @@
 import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+import { getAuth } from 'firebase/auth';
 
 const Favourite = () => {
     const [favorites, setFavorites] = useState([]);
     const navigate = useNavigate();
-    const currentUserEmail = 'sumayaecetabassum@gmail.com'; // Replace this with actual user data (e.g., from context or authentication)
+    const [currentUserEmail, setCurrentUserEmail] = useState(null);
 
     useEffect(() => {
-        // Fetch favorite movies for the logged-in user
-        const fetchFavorites = async () => {
-            try {
-                // Make sure to adjust the URL with the correct user's email or other user identifier
-                const response = await fetch(`http://localhost:5000/favorites?email=${currentUserEmail}`);
-                const data = await response.json();
-                setFavorites(data);
-            } catch (error) {
-                console.error('Error fetching favorites:', error);
-                Swal.fire('Error!', 'Failed to load favorite movies.', 'error');
-            }
-        };
+        // Get the current user from Firebase Authentication
+        const user = getAuth().currentUser;  // Don't pass auth here, just call getAuth()
 
-        fetchFavorites();
-    }, []);
+        if (user) {
+            // Set the current user's email
+            setCurrentUserEmail(user.email);
+        } else {
+            // Redirect or show login if no user is logged in
+            Swal.fire('Error!', 'You must be logged in to view favorites.', 'error');
+            navigate('/login');
+        }
+    }, [navigate]);
+
+    useEffect(() => {
+        if (currentUserEmail) {
+            // Fetch favorite movies for the logged-in user
+            const fetchFavorites = async () => {
+                try {
+                    const response = await fetch(`http://localhost:5000/favorites?email=${currentUserEmail}`);
+                    const data = await response.json();
+                    setFavorites(data);
+                } catch (error) {
+                    console.error('Error fetching favorites:', error);
+                    Swal.fire('Error!', 'Failed to load favorite movies.', 'error');
+                }
+            };
+
+            fetchFavorites();
+        }
+    }, [currentUserEmail]);
 
     const handleDeleteFavorite = async (movieId) => {
         try {
-            // Send request to delete the movie from favorites
             const response = await fetch(`http://localhost:5000/favorites/${movieId}`, {
                 method: 'DELETE',
             });
 
             if (response.ok) {
                 Swal.fire('Deleted!', 'The movie has been removed from your favorites.', 'success');
-                // Update the state to reflect the deletion
                 setFavorites(favorites.filter((movie) => movie._id !== movieId));
             } else {
                 throw new Error('Failed to delete movie from favorites.');
