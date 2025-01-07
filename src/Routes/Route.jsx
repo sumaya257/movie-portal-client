@@ -12,10 +12,12 @@ import Home from "../Pages/Home";
 import PrivateRoute from "./PrivateRoute";
 import AboutUs from "../Components/AboutUs";
 
+
+
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <MainLayout></MainLayout>,
+        element:<MainLayout></MainLayout>,
         children: [
              
             {

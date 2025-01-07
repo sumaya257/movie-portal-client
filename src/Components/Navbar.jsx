@@ -1,11 +1,14 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../Providers/AuthProvider';
+import { MdOutlineDarkMode } from "react-icons/md";
+import { DarkModeContext } from '../Providers/DarkModeProvider';
 
 const Navbar = () => {
   const { user, logOut } = useContext(AuthContext);
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { isDarkMode, toggleDarkMode } = useContext(DarkModeContext);
 
   // Toggle mobile menu
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
@@ -89,6 +92,14 @@ const Navbar = () => {
               </button>
             </>
           )}
+          <button
+          onClick={toggleDarkMode}
+          className={`p-2 rounded-full ${
+            isDarkMode ? "bg-gray-800 text-white" : "bg-white text-gray-800"
+          }`}
+        >
+          <MdOutlineDarkMode size={24} />
+        </button>
         </div>
 
         {/* Mobile Menu Button */}

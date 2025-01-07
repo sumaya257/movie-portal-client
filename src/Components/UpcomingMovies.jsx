@@ -1,4 +1,4 @@
-const UpcomingMovies = ({theme}) => {
+const UpcomingMovies = () => {
     const upcomingMovies = [
         { title: 'The Marvels', releaseDate: '2024-02-15', poster: 'https://i.ibb.co.com/CHgYpzf/marvel.jpg' },
         { title: 'Aquaman and the Lost Kingdom', releaseDate: '2024-03-17', poster: 'https://i.ibb.co.com/bRSvhPY/lost.jpg' },
@@ -6,8 +6,8 @@ const UpcomingMovies = ({theme}) => {
     ];
 
     return (
-        <div className={`min-h-screen ${theme === 'dark' ? 'bg-gray-900 text-black' : 'bg-white text-black'}`}>
-        <div className="p-6  bg-gray-100 rounded-lg">
+        
+        <div className="p-6 mt-16 mb-16 dark:bg-gray-900 dark:text-white border bg-slate-100 text-black rounded-lg">
             <h2 className="text-2xl font-bold mb-4 text-center">Upcoming Movies</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {upcomingMovies.map((movie, index) => (
@@ -25,7 +25,7 @@ const UpcomingMovies = ({theme}) => {
                 ))}
             </div>
         </div>
-        </div>
+        
     );
 };
 

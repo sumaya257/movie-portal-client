@@ -32,7 +32,7 @@ const AllMovies = () => {
                     placeholder="Search by Title"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="input input-bordered w-1/2"
+                    className="input input-bordered w-1/2  dark:bg-gray-900 dark:text-white border-white bg-slate-100 text-black "
                 />
             </div>
 
@@ -41,7 +41,7 @@ const AllMovies = () => {
                 {filteredMovies.map((movie) => (
                     <div
                         key={movie._id}
-                        className="card bg-base-100 shadow-xl p-4 border border-gray-200"
+                        className="card  dark:bg-gray-900 dark:text-white bg-slate-100 text-black  shadow-xl p-4 border border-gray-200"
                     >
                         {/* Movie Poster */}
                         <figure>

@@ -6,9 +6,13 @@ import router from './Routes/Route'
 import AuthProvider from './Providers/AuthProvider'
 import { ToastContainer } from 'react-toastify'
 import { MoviesProvider } from './Providers/MoviesContext'
+import DarkModeProvider from './Providers/DarkModeProvider'
+import AppWrapper from './Providers/AppWrapper'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
+    <DarkModeProvider>
+      <AppWrapper>
     <MoviesProvider>
     <AuthProvider>
        {/* ToastContainer is placed at the root level for global availability */}
@@ -16,5 +20,7 @@ createRoot(document.getElementById('root')).render(
      <RouterProvider router={router} />
      </AuthProvider>
      </MoviesProvider>
+     </AppWrapper>
+     </DarkModeProvider>
   </StrictMode>,
 )

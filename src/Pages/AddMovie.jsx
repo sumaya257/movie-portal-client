@@ -106,7 +106,7 @@ const AddMovie = ({ userEmail }) => {
     };
 
     return (
-        <div className="p-6 w-9/12 mx-auto bg-gray-100">
+        <div className="p-6 w-9/12 mx-auto  dark:bg-gray-900 dark:text-white border bg-slate-100 text-black ">
             <h1 className="text-2xl font-bold mb-4">Add Movie</h1>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
@@ -160,7 +160,7 @@ const AddMovie = ({ userEmail }) => {
                         <p className="text-red-500">{errors.releaseYear}</p>
                     )}
                 </div>
-                <div className="p-6 w-1/2 mx-auto bg-gray-100 rounded shadow-md">
+                <div className="p-6 w-1/2 mx-auto  rounded shadow-md">
                     <h1 className="text-xl font-bold mb-4">Rate This Movie</h1>
                     <div className="flex items-center justify-center space-x-2">
                         <Rating

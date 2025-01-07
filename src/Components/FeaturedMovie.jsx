@@ -2,24 +2,23 @@ import React from 'react';
 import { useMovies } from '../Providers/MoviesContext'; // import the custom hook
 import { Link } from 'react-router-dom';
 
-const FeaturedMovies = ({ theme }) => {
+const FeaturedMovies = () => {
     const { movies } = useMovies(); // Access the movies data from context
 
 
     // Filter the highest-rated movies (or any other logic you want)
-    const featuredMovies = [...movies].sort((a, b) => b.rating - a.rating).slice(0, 6);
+    const featuredMovies = [...movies].sort((a, b) => b.rating - a.rating).slice(0, 8);
 
     return (
-        <div className={`p-6 rounded-lg ${theme === 'dark' ? 'bg-gray-800 text-black' : 'bg-gray-100 text-black'
-            }`}
-        >
+        <div className='mb-16 
+        <div className="p-6 mt-16  dark:bg-gray-900 dark:text-white border bg-slate-100 text-black rounded-lg'>
             <div className="container mx-auto p-6">
                 <h2 className="text-3xl font-bold text-center mb-8">Featured Movies</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {featuredMovies.map((movie) => (
                         <div
                             key={movie._id}
-                            className="card bg-base-100 shadow-xl p-4 border border-gray-200"
+                            className="card  shadow-xl p-1 border border-gray-200"
                         >
                             <figure>
                                 <img
@@ -46,9 +45,9 @@ const FeaturedMovies = ({ theme }) => {
                 </div>
 
                 {/* see all movies */}
-                <div className="text-center mt-8">
+                <div className="text-center mt-4">
                 <Link to="/all-movies">
-                    <button className="btn btn-secondary">See All Movies</button>
+                    <button className="btn btn-secondary p-3">See All Movies</button>
                 </Link>
             </div>
             </div>
