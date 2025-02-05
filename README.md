@@ -28,6 +28,30 @@ Check out the live site here: [Movie Portal](https://movie-portal-dcb5f.web.app/
 - **Authentication**: Firebase
 - **Hosting**: Vercel, Firebase
 
+---
+
+## How to Run the Project Locally
+
+## 1️⃣ **Clone the Repository**
+```sh
+git clone https://github.com/sumaya257/movie-portal-client.git
+cd AdoptNest
+2️⃣ Install Dependencies
+sh
+Copy code
+npm install
+3️⃣ Configure Environment Variables
+Create a .env file in the root directory and add the following:
+
+sh
+Copy code
+VITE_FIREBASE_API_KEY=your_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_auth_domain
+VITE_STRIPE_PUBLIC_KEY=your_stripe_public_key
+4️⃣ Start the Development Server
+sh
+Copy code
+npm run dev
 
 
 
